@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import network
 import threading
 
 from tkinter import *
@@ -11,8 +12,11 @@ from view import *
 class ClientController:
 
 	def __init__(self):
+		self.init()
+
+	def init(self):
 		try:
-			self.root = Tk()
+			root = Tk()
 			confcli = ClientConfigInterface(master=root)
 			confcli.set_callback(self.launch_after_config)
 			confcli.mainloop()
@@ -20,13 +24,12 @@ class ClientController:
 			print("[ERROR - CLIENT - CONTROLLER - INIT] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 			
 	def launch_after_config(self, data):
-		print(data)
 		try:
+			ip,port = data
 			print("[INFO - WAIT] : Launch Client ...")
+			root = Tk()
 			self.icli = ClientInterface(master=root)
-			self.cli = Client(self.icli)
-			print(self.cli)
-			print(threading.enumerate())
+			self.cli = Client(self.icli, ip, port)
 			self.icli.set_client(self.cli)
 			self.icli.mainloop()
 		except Exception as e:
@@ -40,10 +43,9 @@ class ServerController:
 			print("[INFO - WAIT] : Launch Server ...")
 			self.isrv = ServerInterface(master=root)
 			self.srv = Server(self.isrv)
-			print(self.srv)
 			self.srv.start()
-			print(threading.enumerate())
 			self.isrv.mainloop()
+			self.srv.isrun = False
 		except Exception as e:
 			print("[ERROR - SERVER - CONTROLLER] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 

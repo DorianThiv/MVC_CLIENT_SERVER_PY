@@ -37,11 +37,11 @@ class ThreadEmission(threading.Thread):
 
 class Client(threading.Thread):
 	
-	def __init__(self, view):
+	def __init__(self, view, host, port):
 		threading.Thread.__init__(self)
 		self.view = view
-		self.host = "127.0.0.1"
-		self.port = 40000
+		self.host = str(host)
+		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.th_R = None
 		

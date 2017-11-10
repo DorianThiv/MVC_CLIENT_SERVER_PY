@@ -52,10 +52,10 @@ class ClientConfigInterface(Frame):
 		self.labelPort.pack(side=LEFT)
 		self.entryPort = Entry(self.master, width=52)
 		self.entryPort.pack(side=LEFT)
-		self.send = Button(self.master, text="Cancel", width=10, command=self.master.destroy)
-		self.send.pack(side=RIGHT)
-		self.send = Button(self.master, text="Ok", width=10, command=self.valid)
-		self.send.pack(side=RIGHT)
+		self.btnV = Button(self.master, text="Cancel", width=10, command=self.master.destroy)
+		self.btnV.pack(side=RIGHT)
+		self.btnX = Button(self.master, text="Ok", width=10, command=self.valid)
+		self.btnX.pack(side=RIGHT)
 		self.callback = None
 		
 	def set_callback(self, callback):
@@ -64,8 +64,7 @@ class ClientConfigInterface(Frame):
 	def valid(self):
 		ip = self.entryIP.get()
 		port = self.entryPort.get()
-		print(ip)
-		print(port)
+		self.callback((ip, port))
 		self.entryIP.delete(0, END)
 		self.entryPort.delete(0, END)
 
@@ -78,6 +77,8 @@ class ServerInterface(Frame):
 		Frame.__init__(self, master)
 		self.screen = Text(self.master, width=60, height=20, state=DISABLED)
 		self.screen.pack()
+		self.btnStop = Button(self.master, text="Cancel", width=30, command=self.master.destroy)
+		self.btnStop.pack()
 
 	def receive_msg(self, msg):
 		msg = msg + "\n"
