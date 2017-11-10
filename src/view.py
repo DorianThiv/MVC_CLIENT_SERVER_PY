@@ -44,21 +44,30 @@ class ClientConfigInterface(Frame):
 
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
-		self.entry = Entry(self.master, width=52)
-		self.entry.pack()
-		self.entry = Entry(self.master, width=52)
-		self.entry.pack()
+		self.labelIP = Label(self.master, text="IP Address")
+		self.labelIP.pack(side=LEFT)
+		self.entryIP = Entry(self.master, width=52)
+		self.entryIP.pack(side=LEFT)
+		self.labelPort = Label(self.master, text="Port")
+		self.labelPort.pack(side=LEFT)
+		self.entryPort = Entry(self.master, width=52)
+		self.entryPort.pack(side=LEFT)
+		self.send = Button(self.master, text="Cancel", width=10, command=self.master.destroy)
+		self.send.pack(side=RIGHT)
 		self.send = Button(self.master, text="Ok", width=10, command=self.valid)
-		self.send.pack()
-		self.send = Button(self.master, text="Cancel", width=10, command=self.cancel)
-		self.send.pack()
+		self.send.pack(side=RIGHT)
+		self.callback = None
+		
+	def set_callback(self, callback):
+		self.callback = callback
 
 	def valid(self):
-		msg = self.entry.get()
-		self.entry.delete(0, END)
-
-	def cancel(self, msg):
-		pass
+		ip = self.entryIP.get()
+		port = self.entryPort.get()
+		print(ip)
+		print(port)
+		self.entryIP.delete(0, END)
+		self.entryPort.delete(0, END)
 
 ################
 # SERVER VIEW

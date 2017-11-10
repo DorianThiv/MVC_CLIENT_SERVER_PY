@@ -12,7 +12,16 @@ class ClientController:
 
 	def __init__(self):
 		try:
-			root = Tk()
+			self.root = Tk()
+			confcli = ClientConfigInterface(master=root)
+			confcli.set_callback(self.launch_after_config)
+			confcli.mainloop()
+		except Exception as e:
+			print("[ERROR - CLIENT - CONTROLLER - INIT] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
+			
+	def launch_after_config(self, data):
+		print(data)
+		try:
 			print("[INFO - WAIT] : Launch Client ...")
 			self.icli = ClientInterface(master=root)
 			self.cli = Client(self.icli)
@@ -21,7 +30,7 @@ class ClientController:
 			self.icli.set_client(self.cli)
 			self.icli.mainloop()
 		except Exception as e:
-			print("[ERROR - CLIENT - CONTROLLER] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
+			print("[ERROR - CLIENT - CONTROLLER - LAUNCH] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 
 class ServerController:
 
