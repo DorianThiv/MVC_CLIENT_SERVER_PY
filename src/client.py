@@ -41,7 +41,7 @@ class Client(threading.Thread):
 		threading.Thread.__init__(self)
 		self.view = view
 		self.host = str(host)
-		self.port = port
+		self.port = int(port)
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.th_R = None
 		
