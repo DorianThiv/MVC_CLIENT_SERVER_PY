@@ -36,7 +36,29 @@ class ClientInterface(Frame):
 		
 	def set_client(self, cli):
 		self.cli = cli
+		
+################
+# CLIENT VIEW
 
+class ClientConfigInterface(Frame):
+
+	def __init__(self, master=None):
+		Frame.__init__(self, master)
+		self.entry = Entry(self.master, width=52)
+		self.entry.pack()
+		self.entry = Entry(self.master, width=52)
+		self.entry.pack()
+		self.send = Button(self.master, text="Ok", width=10, command=self.valid)
+		self.send.pack()
+		self.send = Button(self.master, text="Cancel", width=10, command=self.cancel)
+		self.send.pack()
+
+	def valid(self):
+		msg = self.entry.get()
+		self.entry.delete(0, END)
+
+	def cancel(self, msg):
+		pass
 
 ################
 # SERVER VIEW
