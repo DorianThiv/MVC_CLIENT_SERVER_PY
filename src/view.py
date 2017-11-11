@@ -30,7 +30,7 @@ class ClientInterface(Frame):
 		self.entry.grid(row=1, column=0, sticky=S+E+W)
 		self.send = Button(self.master, text="Send", width=50, command=self.send_msg)
 		self.send.grid(row=2, column=0, sticky=S+E+W)
-		self.cli = None
+		self.controller = None
 
 	def send_msg(self):
 		msg = self.entry.get()
@@ -38,7 +38,7 @@ class ClientInterface(Frame):
 		self.screen.config(state=NORMAL)
 		self.screen.insert(END, cs_msg)
 		self.screen.config(state=DISABLED)
-		threading.Thread(target=self.cli.cmd_send, args=(msg,)).start()
+		threading.Thread(target=self.controller.cmd_share, args=(msg,)).start()
 		self.entry.delete(0, END)
 
 	def receive_msg(self, msg):
@@ -47,8 +47,8 @@ class ClientInterface(Frame):
 		self.screen.insert(END, msg)
 		self.screen.config(state=DISABLED)
 		
-	def set_client(self, cli):
-		self.cli = cli
+	def set_controller(self, controller):
+		self.controller = controller
 		
 ################
 # CLIENT VIEW
@@ -108,14 +108,22 @@ class ServerInterface(Frame):
 		self.vscroll = Scrollbar(self.master, orient=VERTICAL, command=self.screen.yview)
 		self.screen['yscroll'] = self.vscroll.set
 		self.vscroll.grid(row=0, column=0, sticky=N+S+E)
-		self.btnStop = Button(self.master, text="Shutdown", width=30, command=self.master.destroy)
+		self.btnStop = Button(self.master, text="Shutdown", width=30, command=self.shutdown)
 		self.btnStop.grid(row=1, column=0, sticky=S+E+W)
+		self.controller = None
 
 	def receive_msg(self, msg):
 		msg = msg + "\n"
 		self.screen.config(state=NORMAL)
 		self.screen.insert(END, msg)
 		self.screen.config(state=DISABLED)
+
+	def shutdown(self):
+		self.controller.close()
+		self.master.destroy()
+
+	def set_controller(self, controller):
+		self.controller = controller 
 
 class ServerConfigInterface(Frame):
 
@@ -152,17 +160,19 @@ class ServerConfigInterface(Frame):
 ################
 # GENERAL VIEW
 
-def app_header():
-	print("*************************")
-	print("*** APP CLIENT/SERVER ***")
-	print("*************************")
+class GeneralView:
 
-def app_options():
-	print("* Options : ")
-	print("* Launch a client : press 'c'")
-	print("* Launch the server : press 's'")
-	res = input("[c|s] : ")
-	return res
+	def app_header():
+		print("*************************")
+		print("*** APP CLIENT/SERVER ***")
+		print("*************************")
+
+	def app_options():
+		print("* Options : ")
+		print("* Launch a client : press 'c'")
+		print("* Launch the server : press 's'")
+		res = input("[c|s] : ")
+		return res
 
     
     

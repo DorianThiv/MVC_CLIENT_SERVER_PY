@@ -18,10 +18,10 @@
 	ask you to choose two options [c|s] client or server.
 
 	Controller :
-	C	- ClientController : 
+	C	- ClientLauncher : 
 	V		- ClientInterface
 	M		- Client
-	C	- ServerController : 
+	C	- ServerLauncher : 
 	V		- ServerInterface :
 	M		- Server
 
@@ -34,15 +34,16 @@ import threading
 
 from tkinter import *
 
-from client import Client
-from server import Server
-from view import *
+from client import ClientController
+from server import ServerController
+from view import GeneralView, ServerConfigInterface, ClientConfigInterface
+
 from network.network import *
 
 ###########################
-# class : ClientController
+# class : ClientLauncher
 
-class ClientController:
+class ClientLauncher:
 
 	def __init__(self):
 		self.initialize()
@@ -60,11 +61,7 @@ class ClientController:
 		try:
 			ip,port = data 
 			check_ip(ip)
-			root = Tk()
-			self.icli = ClientInterface(master=root)
-			self.cli = Client(self.icli, ip, port)
-			self.icli.set_client(self.cli)
-			self.icli.mainloop()
+			self.cli = ClientController(ip, port)
 		except FormatIPError as e:
 			print("[ERROR - FORMAT - CLIENT - CONTROLLER - LAUNCH] : {}".format(e))
 			self.initialize()
@@ -72,9 +69,9 @@ class ClientController:
 			print("[ERROR - CLIENT - CONTROLLER - LAUNCH] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 
 ###########################
-# class : ServerController
+# class : ServerLauncher
 
-class ServerController:
+class ServerLauncher:
 
 	def __init__(self):
 		self.initialize()
@@ -90,15 +87,9 @@ class ServerController:
 
 	def run(self, data):
 		try:
-			port = data 
+			port = data
 			check_port(port)
-			root = Tk()
-			print("[INFO - WAIT] : Launch Server ...")
-			self.isrv = ServerInterface(master=root)
-			self.srv = Server(self.isrv)
-			self.srv.start()
-			self.isrv.mainloop()
-			self.srv.isrun = False
+			self.srv = ServerController("127.0.0.1", port)
 		except SocketError as e:
 			print("[ERROR - SOCKET - CONTROLLER - LAUNCH] : {}".format(e))
 			self.initialize()
@@ -106,12 +97,12 @@ class ServerController:
 			print("[ERROR - SERVER - CONTROLLER] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 
 def main():
-	app_header()
-	res = app_options()
+	GeneralView.app_header()
+	res = GeneralView.app_options()
 	if res == "c":
-		ClientController()
+		ClientLauncher()
 	elif res == "s":
-		ServerController()
+		ServerLauncher()
 	else:
 		print("[ERROR] : Commande inconnues")
 

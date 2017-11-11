@@ -4,7 +4,10 @@
 
 # Server threading
 
+from tkinter import *
 import socket, sys, threading
+
+from view import ServerInterface
 
 class ThreadClient(threading.Thread):
     
@@ -38,17 +41,17 @@ class ThreadClient(threading.Thread):
 	def send(self, msg):
 		self.connexion.send(msg)
 
-class Server(threading.Thread):
+class ServerController:
 
-	def __init__(self, view_srv):
-	
-		threading.Thread.__init__(self)
+	N_CONN = 5
 
-		self.N_CONN = 5
+	def __init__(self, ip, port):
 
-		self.view = view_srv
-		self.host = "127.0.0.1"
-		self.port = 4000
+		root = Tk()
+		self.view = ServerInterface(master=root)
+		self.view.set_controller(self)
+		self.host = str(ip)
+		self.port = int(port)
 		self.clients = {}
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.isrun = True
@@ -59,12 +62,11 @@ class Server(threading.Thread):
 			print ("[ERROR - SERVER] : La liaison du socket à l'adresse choisie a échoué ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 			sys.exit()
 
-		print ("[LOG] Server ready ... Number connection : {}".format(self.N_CONN))
-		self.socket.listen(self.N_CONN)
+		print ("[LOG] Server ready ... Number connection : {}".format(ServerController.N_CONN))
+		self.socket.listen(ServerController.N_CONN)
 
-	def __del__(self):
-		for n,t in self.clients.items():
-			self.clients[n].isrun = False
+		threading.Thread(target= self.run).start()
+		self.view.mainloop()
     
 	def run(self):
 		while self.isrun:
@@ -95,6 +97,7 @@ class Server(threading.Thread):
 
 	def close(self):
 		self.isrun = False
+		sys.exit()
 
         
         
