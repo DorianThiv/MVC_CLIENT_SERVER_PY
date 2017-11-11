@@ -85,6 +85,7 @@ class ServerController:
 				print("[ERROR - SERVER] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 				self.isrun = False
 				sys.exit()
+		
                 
 	def share(self, emetter_name, msg):
 		self.view.receive_msg(msg)
