@@ -48,7 +48,7 @@ class Server(threading.Thread):
 
 		self.view = view_srv
 		self.host = "127.0.0.1"
-		self.port = 40000
+		self.port = 4000
 		self.clients = {}
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.isrun = True
