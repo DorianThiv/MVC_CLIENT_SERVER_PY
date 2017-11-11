@@ -19,15 +19,17 @@ class ClientInterface(Frame):
 
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
+		self.master.rowconfigure(0, weight=1)
+		self.master.columnconfigure(0, weight=1)
 		self.screen = Text(self.master, width=10, height=10, state=DISABLED)
-		self.screen.pack(fill=BOTH, expand=True)
-		# self.vscroll = Scrollbar(self.master, orient=VERTICAL, command=self.screen.yview)
-		# self.screen['yscroll'] = self.vscroll.set
-		# self.vscroll.pack(side=RIGHT, fill="y")
+		self.screen.grid(row=0, column=0, sticky=N+S+E+W)
+		self.vscroll = Scrollbar(self.master, orient=VERTICAL, command=self.screen.yview)
+		self.screen['yscroll'] = self.vscroll.set
+		self.vscroll.grid(row=0, column=0, sticky=N+S+E)
 		self.entry = Entry(self.master, width=52)
-		self.entry.pack(fill=BOTH)
+		self.entry.grid(row=1, column=0, sticky=S+E+W)
 		self.send = Button(self.master, text="Send", width=50, command=self.send_msg)
-		self.send.pack(fill=BOTH)
+		self.send.grid(row=2, column=0, sticky=S+E+W)
 		self.cli = None
 
 	def send_msg(self):
@@ -99,13 +101,15 @@ class ServerInterface(Frame):
 
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
+		self.master.rowconfigure(0, weight=1)
+		self.master.columnconfigure(0, weight=1)
 		self.screen = Text(self.master, width=60, height=20, state=DISABLED)
-		self.screen.pack(side=LEFT, fill="both", expand=True)
+		self.screen.grid(row=0, column=0, sticky=N+S+E+W)
 		self.vscroll = Scrollbar(self.master, orient=VERTICAL, command=self.screen.yview)
 		self.screen['yscroll'] = self.vscroll.set
-		self.vscroll.pack(side=LEFT, fill="y")
+		self.vscroll.grid(row=0, column=0, sticky=N+S+E)
 		self.btnStop = Button(self.master, text="Shutdown", width=30, command=self.master.destroy)
-		self.btnStop.pack(side=BOTTOM)
+		self.btnStop.grid(row=1, column=0, sticky=S+E+W)
 
 	def receive_msg(self, msg):
 		msg = msg + "\n"
