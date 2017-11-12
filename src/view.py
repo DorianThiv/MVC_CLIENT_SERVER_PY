@@ -115,6 +115,7 @@ class ServerInterface(Frame):
 		self.controller = None
 
 	def receive_msg(self, msg):
+		print("In receive_msg --> view")
 		msg = msg + "\n"
 		self.screen.config(state=NORMAL)
 		self.screen.insert(END, msg)

@@ -29,7 +29,7 @@ class ThreadClient(threading.Thread):
 			try:
 				msg = self.connexion.recv(1024).decode()
 				if msg != None:
-					if msg.upper() == "FIN" or msg == "":
+					if msg == "":
 						self.isrun = False
 					else:
 						self.get_receive(msg)
@@ -76,8 +76,6 @@ class ServerController:
 			except Exception as e:
 				print("[ERROR - SERVER] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 				self.isrun = False
-				sys.exit()
-		self.view.master.destroy()
 		raise ServerCloseWarning("Shutdown server")
 	
 	def __add(self):
@@ -86,29 +84,27 @@ class ServerController:
 		threadClient.set_callback(self.__share, self.__del_user)
 		threadClient.start()
 		self.clients[threadClient.name] = threadClient
-		self.view.receive_msg("""[SUCCESS] : Client {} connecté, Adresse IP : {}, Port : {}""".format(threadClient.name, addr[0], addr[1]))
+		self.view.receive_msg("[SUCCESS] : Client {} connecté, Adresse IP : {}, Port : {}".format(threadClient.name, addr[0], addr[1]))
 		self.__send_success_connect(self.clients[threadClient.name])
                 
 	def __share(self, em_name, msg):
-		# Format.formatt(name, message)
+		# Format.format(name, message)
 		self.view.receive_msg(msg)
 		for n in self.clients.keys():
 			if n != em_name:
 				msg = "{} > {}".format(n, msg)
 				self.clients[n].send(msg.encode())
-
-	def __del_user(self, name):
-		self.clients[name].isrun = False
-		del self.clients[name]
-		self.view.receive_msg("[INFO] : Client {} is disconnect.".format(name))
-
 	def __send_success_connect(self, cli):
 		msg = "[SUCCESS] : Connection au serveur à l'addresse {} sur le port {}".format(self.host, self.port)
 		cli.send(msg.encode())
 
+	def __del_user(self, name):
+		del self.clients[name]
+		self.view.receive_msg("[INFO] : Client {} is disconnect.".format(name))
+
 	def close(self):
-		self.socket.close()
 		self.isrun = False
+		self.view.master.destroy()
 
         
         
