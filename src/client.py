@@ -4,8 +4,6 @@
 
 # Client Threading
 
-from tkinter import *
-
 import socket, sys, threading
 
 from view import ClientInterface

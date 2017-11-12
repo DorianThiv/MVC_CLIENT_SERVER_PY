@@ -3,6 +3,7 @@
 import threading
 
 from tkinter import *
+from formater.format import Format
 
 class EmptyFieldError(Exception):
 
@@ -37,6 +38,7 @@ class ClientInterface(Frame):
 		msg = self.entry.get()
 		print(msg)
 		if len(msg) != 0:
+			cs_msg = Format.formatMessage("You", msg)
 			cs_msg = "You > " + msg + "\n"
 			self.screen.config(state=NORMAL)
 			self.screen.insert(END, cs_msg)
