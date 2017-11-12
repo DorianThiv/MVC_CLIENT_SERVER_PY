@@ -35,17 +35,21 @@ class ClientInterface(Frame):
 
 	def send_msg(self):
 		msg = self.entry.get()
-		cs_msg = "You > " + msg + "\n"
-		self.screen.config(state=NORMAL)
-		self.screen.insert(END, cs_msg)
-		self.screen.config(state=DISABLED)
-		threading.Thread(target=self.controller.cmd_share, args=(msg,)).start()
-		self.entry.delete(0, END)
+		print(msg)
+		if len(msg) != 0:
+			cs_msg = "You > " + msg + "\n"
+			self.screen.config(state=NORMAL)
+			self.screen.insert(END, cs_msg)
+			self.screen.see(END)
+			self.screen.config(state=DISABLED)
+			threading.Thread(target=self.controller.cmd_share, args=(msg,)).start()
+			self.entry.delete(0, END)
 
 	def receive_msg(self, msg):
 		msg = msg + "\n"
 		self.screen.config(state=NORMAL)
 		self.screen.insert(END, msg)
+		self.screen.see(END)
 		self.screen.config(state=DISABLED)
 		
 	def set_controller(self, controller):
@@ -115,10 +119,10 @@ class ServerInterface(Frame):
 		self.controller = None
 
 	def receive_msg(self, msg):
-		print("In receive_msg --> view")
 		msg = msg + "\n"
 		self.screen.config(state=NORMAL)
 		self.screen.insert(END, msg)
+		self.screen.see(END)
 		self.screen.config(state=DISABLED)
 
 	def shutdown(self):
