@@ -42,8 +42,7 @@ class ThreadEmission(threading.Thread):
 class ClientController:
 	
 	def __init__(self, ip, port):
-		root = Tk()
-		self.view = ClientInterface(master=root)
+		self.view = ClientInterface()
 		self.view.set_controller(self)
 		self.host = str(ip)
 		self.port = int(port)

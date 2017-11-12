@@ -30,15 +30,14 @@
 ###############################
 # imports :
 
-import threading
+import sys, threading
 
-from tkinter import *
-
+from view import GeneralView, ServerConfigInterface, ClientConfigInterface
 from client import ClientController
 from server import ServerController
-from view import GeneralView, ServerConfigInterface, ClientConfigInterface
 
 from network.network import *
+from network.error import *
 
 ###########################
 # class : ClientLauncher
@@ -50,8 +49,7 @@ class ClientLauncher:
 
 	def initialize(self):
 		try:
-			root = Tk()
-			self.confcli = ClientConfigInterface(master=root)
+			self.confcli = ClientConfigInterface()
 			self.confcli.set_callback(self.run)
 			self.confcli.mainloop()
 		except Exception as e:
@@ -60,7 +58,7 @@ class ClientLauncher:
 	def run(self, data):
 		try:
 			ip,port = data 
-			check_ip(ip)
+			checkIp(ip)
 			self.cli = ClientController(ip, port)
 		except FormatIPError as e:
 			print("[ERROR - FORMAT - CLIENT - CONTROLLER - LAUNCH] : {}".format(e))
@@ -78,8 +76,7 @@ class ServerLauncher:
 		
 	def initialize(self):
 		try:
-			root = Tk()
-			self.confsrv = ServerConfigInterface(master=root)
+			self.confsrv = ServerConfigInterface()
 			self.confsrv.set_callback(self.run)
 			self.confsrv.mainloop()
 		except Exception as e:
@@ -88,7 +85,7 @@ class ServerLauncher:
 	def run(self, data):
 		try:
 			port = data
-			check_port(port)
+			checkPort(port)
 			self.srv = ServerController("127.0.0.1", port)
 		except SocketError as e:
 			print("[ERROR - SOCKET - CONTROLLER - LAUNCH] : {}".format(e))

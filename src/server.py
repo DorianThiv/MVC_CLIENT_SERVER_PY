@@ -9,6 +9,8 @@ import socket, sys, threading
 
 from view import ServerInterface
 
+from network.error import ServerCloseWarning
+
 class ThreadClient(threading.Thread):
     
 	def __init__(self, conn):
@@ -18,8 +20,9 @@ class ThreadClient(threading.Thread):
 		self.name = self.getName()
 		self.isrun = True
 
-	def srv_cmd(self, cmd_share):
+	def set_callback(self, cmd_share, cmd_del_user):
 		self.cmd_share = cmd_share
+		self.cmd_del_user = cmd_del_user
 
 	def run(self):
 		while self.isrun:
@@ -32,8 +35,8 @@ class ThreadClient(threading.Thread):
 						self.get_receive(msg)
 			except Exception as e:
 				print("[ERROR - THREAD_CLIENT] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
-
-		print("Thread {} was kill".format(self.name))
+		print("[INFO] : Thread {} was kill".format(self.name))
+		self.cmd_del_user(self.name)
 
 	def get_receive(self, msg):
 		self.cmd_share(self.name, msg)
@@ -46,14 +49,12 @@ class ServerController:
 	N_CONN = 5
 
 	def __init__(self, ip, port):
-
-		root = Tk()
-		self.view = ServerInterface(master=root)
+		self.view = ServerInterface()
 		self.view.set_controller(self)
 		self.host = str(ip)
 		self.port = int(port)
-		self.clients = {}
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.clients = {}
 		self.isrun = True
 
 		try:
@@ -69,36 +70,45 @@ class ServerController:
 		self.view.mainloop()
     
 	def run(self):
-		while self.isrun:
+		while self.isrun == True:
 			try:
-				connection, addr = self.socket.accept()
-				threadClient = ThreadClient(connection)
-				threadClient.srv_cmd(self.share)
-				threadClient.start()
-				self.clients[threadClient.name] = threadClient
-				print("[SUCCESS] : Client {} connecté, Adresse IP : {}, Port : {}".format(threadClient.name, addr[0], addr[1]))
-				# Send message to inform from the connection.
-				msg = "[SUCCESS] : Connection au serveur à l'addresse {} sur le port {}".format(self.host, self.port)
-				self.clients[threadClient.name].send(msg.encode())
-				
+				self.__add()
 			except Exception as e:
 				print("[ERROR - SERVER] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 				self.isrun = False
 				sys.exit()
-		
+		self.view.master.destroy()
+		raise ServerCloseWarning("Shutdown server")
+	
+	def __add(self):
+		connection, addr = self.socket.accept()
+		threadClient = ThreadClient(connection)
+		threadClient.set_callback(self.__share, self.__del_user)
+		threadClient.start()
+		self.clients[threadClient.name] = threadClient
+		self.view.receive_msg("""[SUCCESS] : Client {} connecté, Adresse IP : {}, Port : {}""".format(threadClient.name, addr[0], addr[1]))
+		self.__send_success_connect(self.clients[threadClient.name])
                 
-	def share(self, emetter_name, msg):
+	def __share(self, em_name, msg):
+		# Format.formatt(name, message)
 		self.view.receive_msg(msg)
 		for n in self.clients.keys():
-			if n != emetter_name:
+			if n != em_name:
 				msg = "{} > {}".format(n, msg)
 				self.clients[n].send(msg.encode())
-				#del self.clients[n]
-				#print("[SUCCESS] : Client at : {} is disconnect.".format(n))
+
+	def __del_user(self, name):
+		self.clients[name].isrun = False
+		del self.clients[name]
+		self.view.receive_msg("[INFO] : Client {} is disconnect.".format(name))
+
+	def __send_success_connect(self, cli):
+		msg = "[SUCCESS] : Connection au serveur à l'addresse {} sur le port {}".format(self.host, self.port)
+		cli.send(msg.encode())
 
 	def close(self):
+		self.socket.close()
 		self.isrun = False
-		sys.exit()
 
         
         

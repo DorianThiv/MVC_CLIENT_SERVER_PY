@@ -18,7 +18,8 @@ class EmptyFieldError(Exception):
 class ClientInterface(Frame):
 
 	def __init__(self, master=None):
-		Frame.__init__(self, master)
+		root = Tk()
+		Frame.__init__(self, root)
 		self.master.rowconfigure(0, weight=1)
 		self.master.columnconfigure(0, weight=1)
 		self.screen = Text(self.master, width=10, height=10, state=DISABLED)
@@ -59,8 +60,8 @@ class ClientConfigInterface(Frame):
 	DEFAULT_PORT = "4000"
 
 	def __init__(self, master=None):
-		Frame.__init__(self, master)
-		
+		root = Tk()
+		Frame.__init__(self, root)
 		self.labelIP = Label(self.master, text="IP Address")
 		self.labelIP.grid(row=0)
 		self.entryIP = Entry(self.master, width=52)
@@ -100,7 +101,8 @@ class ClientConfigInterface(Frame):
 class ServerInterface(Frame):
 
 	def __init__(self, master=None):
-		Frame.__init__(self, master)
+		root = Tk()
+		Frame.__init__(self, root)
 		self.master.rowconfigure(0, weight=1)
 		self.master.columnconfigure(0, weight=1)
 		self.screen = Text(self.master, width=60, height=20, state=DISABLED)
@@ -120,7 +122,6 @@ class ServerInterface(Frame):
 
 	def shutdown(self):
 		self.controller.close()
-		self.master.destroy()
 
 	def set_controller(self, controller):
 		self.controller = controller 
@@ -130,8 +131,8 @@ class ServerConfigInterface(Frame):
 	DEFAULT_PORT = "4000"
 
 	def __init__(self, master=None):
-		Frame.__init__(self, master)
-		
+		root = Tk()
+		Frame.__init__(self, root)
 		self.labelPort = Label(self.master, text="Port")
 		self.labelPort.grid(row=1)
 		self.entryPort = Entry(self.master, width=52)

@@ -2,23 +2,9 @@
 
 import socket
 
-class FormatIPError(Exception):
+from .error import FormatIPError, SocketError
 
-    def __init__(self, msg):
-        self.message = msg
-
-    def __str__(self):
-        return "FormatIPError : {}".format(self.message)
-
-class SocketError(Exception):
-
-    def __init__(self, msg):
-        self.message = msg
-
-    def __str__(self):
-        return "SocketError : {}".format(self.message)
-
-def check_ip(ip):
+def checkIp(ip):
     ip_bytes = ip.split(".")
     if (len(ip_bytes) != 4):
         raise FormatIPError("Bytes number is wrong")
@@ -29,7 +15,7 @@ def check_ip(ip):
     return True
         
 
-def check_port(port):
+def checkPort(port):
     if isinstance(port, str):
         port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -37,6 +23,10 @@ def check_port(port):
         s.bind(("127.0.0.1", port))
     except socket.error as e:
         raise SocketError(e)
+
+def getIpAdress():
+    pass
+
 
 
         
