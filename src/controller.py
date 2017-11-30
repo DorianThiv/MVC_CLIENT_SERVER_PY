@@ -3,7 +3,7 @@
 ##########################################################
 # Client - Server :                                    
 #
-# (C) THIVOLLE Dorian, Grenoble (France) - 0ctober 2017 
+# (C) THIVOLLE Dorian, Grenoble (France) - October 2017 
 # Licence : GPL
 #
 # Using Threads, MVC, ...
@@ -11,19 +11,19 @@
 ##########################################################
 
 """
-	*** CLIENT SERVER FROM MVC PATTERN ***
-	
-	From this file you can launch server and client
-	Execute this program with a terminal. It will 
-	ask you to choose two options [c|s] client or server.
+CLIENT SERVER FROM MVC PATTERN ***
 
-	Controller :
-	C	- ClientLauncher : 
-	V		- ClientInterface
-	M		- Client
-	C	- ServerLauncher : 
-	V		- ServerInterface :
-	M		- Server
+From this file you can launch server and client
+Execute this program with a terminal. It will 
+ask you to choose two options [c|s] client or server.
+
+Program :
+C	- ClientLauncher : 
+V		- ClientInterface
+M		- Client
+C	- ServerLauncher : 
+V		- ServerInterface :
+M		- Server
 
 """
 
@@ -57,7 +57,7 @@ class ClientLauncher:
 			
 	def run(self, data):
 		try:
-			ip,port = data 
+			ip,port = data
 			checkIp(ip)
 			self.cli = ClientController(ip, port)
 		except FormatIPError as e:
@@ -84,9 +84,13 @@ class ServerLauncher:
 
 	def run(self, data):
 		try:
-			port = data
+			ip,port = data
+			checkIp(ip)
 			checkPort(port)
-			self.srv = ServerController("127.0.0.1", port)
+			self.srv = ServerController(ip, port)
+		except FormatIPError as e:
+			print("[ERROR - FORMAT - CLIENT - CONTROLLER - LAUNCH] : {}".format(e))
+			self.initialize()
 		except SocketError as e:
 			print("[ERROR - SOCKET - CONTROLLER - LAUNCH] : {}".format(e))
 			self.initialize()
@@ -104,6 +108,8 @@ def main():
 		print("[ERROR] : Commande inconnues")
 
 if __name__ == "__main__":
+		
 	main()
+	
 
 

@@ -4,6 +4,7 @@ import threading
 
 from tkinter import *
 from formater.format import Format
+from network.network import *
 
 class EmptyFieldError(Exception):
 
@@ -71,7 +72,11 @@ class ClientConfigInterface(Frame):
 		self.labelIP = Label(self.master, text="IP Address")
 		self.labelIP.grid(row=0)
 		self.entryIP = Entry(self.master, width=52)
-		self.entryIP.insert(0, ClientConfigInterface.DEFAULT_IP)
+		local_ip = getIpAdress()
+		if local_ip != None:
+			self.entryIP.insert(0, str(local_ip))
+		else:
+			self.entryIP.insert(0, ClientConfigInterface.DEFAULT_IP)
 		self.entryIP.grid(row=0, column=1)
 		
 		self.labelPort = Label(self.master, text="Port")
@@ -134,12 +139,23 @@ class ServerInterface(Frame):
 		self.controller = controller 
 
 class ServerConfigInterface(Frame):
-
+	
+	DEFAULT_IP = "127.0.0.1"
 	DEFAULT_PORT = "4000"
 
 	def __init__(self, master=None):
 		root = Tk()
 		Frame.__init__(self, root)
+		self.labelIP = Label(self.master, text="IP Address")
+		self.labelIP.grid(row=0)
+		self.entryIP = Entry(self.master, width=52)
+		local_ip = getIpAdress()
+		if local_ip != None:
+			self.entryIP.insert(0, str(local_ip))
+		else:
+			self.entryIP.insert(0, ServerConfigInterface.DEFAULT_IP)
+		self.entryIP.grid(row=0, column=1)
+		
 		self.labelPort = Label(self.master, text="Port")
 		self.labelPort.grid(row=1)
 		self.entryPort = Entry(self.master, width=52)
@@ -157,13 +173,15 @@ class ServerConfigInterface(Frame):
 		self.callback = callback
 
 	def valid(self):
+		ip = self.entryIP.get()
 		port = self.entryPort.get()
-		if len(port) == 0:
+		if len(ip) == 0 or len(port) == 0:
 			# raise EmptyFieldError("Field 'ip' or 'port' or both are empty")
 			return
+		self.entryIP.delete(0, END)
 		self.entryPort.delete(0, END)
 		self.master.destroy()
-		self.callback(port)
+		self.callback((ip,port))
 
 ################
 # GENERAL VIEW

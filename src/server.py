@@ -5,11 +5,12 @@
 # Server threading
 
 from tkinter import *
+
 import socket, sys, threading
 
 from view import ServerInterface
-
 from network.error import ServerCloseWarning
+from formater.format import Format
 
 class ThreadClient(threading.Thread):
     
@@ -88,12 +89,11 @@ class ServerController:
 		self.__send_success_connect(self.clients[threadClient.name])
                 
 	def __share(self, em_name, msg):
-		# Format.format(name, message)
-		self.view.receive_msg(msg)
+		f_msg = Format.formatMessage(em_name, msg)
+		self.view.receive_msg(f_msg)
 		for n in self.clients.keys():
 			if n != em_name:
-				msg = "{} > {}".format(n, msg)
-				self.clients[n].send(msg.encode())
+				self.clients[n].send(f_msg.encode())
 	def __send_success_connect(self, cli):
 		msg = "[SUCCESS] : Connection au serveur à l'addresse {} sur le port {}".format(self.host, self.port)
 		cli.send(msg.encode())

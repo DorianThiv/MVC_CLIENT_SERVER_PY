@@ -31,7 +31,7 @@ class ThreadEmission(threading.Thread):
 
 	def __init__(self, conn, msg):
 		threading.Thread.__init__(self)
-		self.connexion = conn # ref du socket de connexion
+		self.connexion = conn
 		self.msg = msg
 		
 	def run(self):
