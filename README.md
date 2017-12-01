@@ -1,4 +1,4 @@
-# MVC_CLIENT_SERVER_PY
+MVC CLIENT SERVER PY
 
 Personal test to learn Threads, Network, Data transfert, etc...
 

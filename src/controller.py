@@ -36,6 +36,7 @@ from view import GeneralView, ServerConfigInterface, ClientConfigInterface
 from client import ClientController
 from server import ServerController
 
+from formater.serializer import *
 from network.network import *
 from network.error import *
 
@@ -108,8 +109,8 @@ def main():
 		print("[ERROR] : Commande inconnues")
 
 if __name__ == "__main__":
-		
-	main()
+	JSON.serialize(1)	
+	#main()
 	
 
 
