@@ -38,7 +38,7 @@ from server import ServerController
 
 from formater.serializer import *
 from network.network import *
-from network.error import *
+from error import *
 
 ###########################
 # class : ClientLauncher
@@ -55,7 +55,7 @@ class ClientLauncher:
 			self.confcli.mainloop()
 		except Exception as e:
 			print("[ERROR - CLIENT - CONTROLLER - INIT] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
-			
+
 	def run(self, data):
 		try:
 			ip,port = data
@@ -74,7 +74,7 @@ class ServerLauncher:
 
 	def __init__(self):
 		self.initialize()
-		
+
 	def initialize(self):
 		try:
 			self.confsrv = ServerConfigInterface()
@@ -109,8 +109,8 @@ def main():
 		print("[ERROR] : Commande inconnues")
 
 if __name__ == "__main__":
-	JSON.serialize(1)	
-	#main()
+	#JSON.serialize(1)
+	main()
 	
 
 

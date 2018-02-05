@@ -9,7 +9,7 @@ from tkinter import *
 import socket, sys, threading
 
 from view import ServerInterface
-from network.error import ServerCloseWarning
+from error import ServerCloseWarning
 from formater.format import Format
 
 class ThreadClient(threading.Thread):

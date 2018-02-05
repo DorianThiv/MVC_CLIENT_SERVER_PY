@@ -2,7 +2,7 @@
 
 import socket
 
-from .error import FormatIPError, SocketError
+from error import FormatIPError, SocketError
 
 def checkIp(ip):
 	ip_bytes = ip.split(".")

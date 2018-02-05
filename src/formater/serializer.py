@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 import json
-import error
+from error import JSONSerializeFormatError
 
 class JSON:
 
@@ -12,7 +12,7 @@ class JSON:
 		if not isinstance(data, str):
 			raise JSONSerializeFormatError("Type is not string")
 		return json.loads(data)
-	
+
 	def deserialize(data):
 		"""
 		 * Take params list to transform in type string

@@ -31,3 +31,11 @@ class SocketError(Exception):
 
     def __str__(self):
         return "SocketError : {}".format(self.message)
+
+class JSONSerializeFormatError(Exception):
+    
+    def __init__(self, msg):
+        self.message = msg
+
+    def __str__(self):
+        return "JSONSerializeFormatError : {}".format(self.message)
