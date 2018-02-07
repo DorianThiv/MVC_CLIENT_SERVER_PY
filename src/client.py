@@ -18,10 +18,10 @@ class ThreadReception(threading.Thread):
 	def run(self):
 		while self.isrun:
 			msg = self.connexion.recv(1024).decode()
-			self.cmd_write(msg)
-		if msg == "" or msg.upper() == "FIN":
-			self.isrun = False
-			print ("Client arrêté. Connexion interompue.")
+			if msg == "" or msg.upper() == "FIN":
+				self.isrun = False
+			self.cmd_write(msg) 
+		print("Client arrêté Connexion interompue.")
 
 	def set_callback_method(self, cmd_write):
 		self.cmd_write = cmd_write
@@ -48,13 +48,13 @@ class ClientController:
 		self.th_R = None
 		
 		try:
-			print ("[INFO] : Connection with the server...")
+			print("[INFO] : Connection with the server...")
 			self.socket.connect((self.host, self.port))
 		except socket.error:
-			print ("[ERROR - CONNECT - CLIENT] : La connexion a échoué. Serveur introuvable")
+			print("[ERROR - CONNECT - CLIENT] : La connexion a échoué. Serveur introuvable")
 			sys.exit() 
 
-		print ("[SUCCESS] : Connexion établie avec le serveur.")
+		print("[SUCCESS] : Connexion établie avec le serveur.")
 
 		try:
 			self.th_R = ThreadReception(self.socket)
