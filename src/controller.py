@@ -99,14 +99,25 @@ class ServerLauncher:
 			print("[ERROR - SERVER - CONTROLLER] ligne {} : {}".format(sys.exc_info()[-1].tb_lineno, e))
 
 def main():
-	GeneralView.app_header()
-	res = GeneralView.app_options()
-	if res == "c":
-		ClientLauncher()
-	elif res == "s":
-		ServerLauncher()
-	else:
-		print("[ERROR] : Commande inconnues")
+	try:
+		GeneralView.app_header()
+		res = GeneralView.app_options()
+		if res == "c":
+			ClientLauncher()
+		elif res == "s":
+			ServerLauncher()
+		else:
+			print("[ERROR] : Commande inconnues")
+	except KeyboardInterrupt:
+		print("Do you want stop the program ?")
+		res = input("(y|n): ")
+		if res == "y":
+			sys.exit()
+		elif res == "n":
+			main()
+		else:
+			print("[ERROR] : Commande inconnues")
+
 
 if __name__ == "__main__":
 	#JSON.serialize(1)
